@@ -1,11 +1,12 @@
 const { model, Schema } = require('mongoose')
 
-const PostSchema = new Schema({
+const TweetSchema = new Schema({
     username: String,
     body: String,
     media: {
-        data: Buffer,
-        contentType: String,
+        filename: String,
+        mimetype: String,
+        encoding: String,
     },
     comments: [
         {
@@ -20,6 +21,12 @@ const PostSchema = new Schema({
             createdAt: String,
         },
     ],
+    retweetedBy: [
+        {
+            username: String,
+            createdAt: String,
+        },
+    ],
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users',
@@ -28,4 +35,4 @@ const PostSchema = new Schema({
     updatedAt: String,
 })
 
-module.exports = model('Post', PostSchema)
+module.exports = model('Tweet', TweetSchema)

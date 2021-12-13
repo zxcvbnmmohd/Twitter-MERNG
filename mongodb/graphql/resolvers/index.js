@@ -1,20 +1,20 @@
 const commentsResolvers = require('./Comments')
-const postsResolvers = require('./Posts')
+const tweetsResolvers = require('./Tweets')
 const usersResolvers = require('./Users')
 
 module.exports = {
-    Post: {
-        ...postsResolvers.Modifiers,
+    Tweet: {
+        ...tweetsResolvers.Modifiers,
     },
     Query: {
-        ...postsResolvers.Query,
+        ...tweetsResolvers.Query,
     },
     Mutation: {
         ...commentsResolvers.Mutation,
-        ...postsResolvers.Mutation,
+        ...tweetsResolvers.Mutation,
         ...usersResolvers.Mutation,
     },
     Subscription: {
-        ...postsResolvers.Subscription,
+        ...tweetsResolvers.Subscription,
     }
 }

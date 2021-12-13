@@ -1,10 +1,10 @@
 const { AuthenticationError, UserInputError } = require("apollo-server-express")
-const Post = require("../../models/Post")
+const Tweet = require("../../models/Tweet")
 const checkAuth = require("../../utils/check-auth")
 
 module.exports = {
     Mutation: {
-        createComment: async (_, { postID, body }, context) => {
+        createComment: async (_, { tweetID, body }, context) => {
             const user = checkAuth(context)
             console.log(user)
 
@@ -16,44 +16,44 @@ module.exports = {
                 })
             }
 
-            const post = await Post.findById(postID)
+            const tweet = await Tweet.findById(tweetID)
 
-            if (post) {
-                post.comments.unshift({
+            if (tweet) {
+                tweet.comments.unshift({
                     body,
                     username: user.username,
                     createdAt: new Date().toISOString(),
                 })
 
-                await post.save()
-                return post
+                await tweet.save()
+                return tweet
             } else {
-                throw new UserInputError("Post not found...")
+                throw new UserInputError("Tweet not found...")
             }
         },
-        deleteComment: async (_, { postID, commentID }, context) => {
+        deleteComment: async (_, { tweetID, commentID }, context) => {
             const user = checkAuth(context)
             console.log(user)
 
-            const post = await Post.findById(postID)
+            const tweet = await Tweet.findById(tweetID)
 
-            if (post) {
-                const commentIndex = post.comments.findIndex(
+            if (tweet) {
+                const commentIndex = tweet.comments.findIndex(
                     (comment) => comment.id === commentID
                 )
                 if (commentIndex >= 0) {
-                    if (post.comments[commentIndex].username === user.username) {
-                        post.comments.splice(commentIndex, 1)
-                        await post.save()
-                        return post
+                    if (tweet.comments[commentIndex].username === user.username) {
+                        tweet.comments.splice(commentIndex, 1)
+                        await tweet.save()
+                        return tweet
                     } else {
-                        throw new AuthenticationError("This ain't your post man...")
+                        throw new AuthenticationError("This ain't your tweet man...")
                     }
                 } else {
                     throw new UserInputError("Comment not found...")
                 }
             } else {
-                throw new UserInputError("Post not found...")
+                throw new UserInputError("Tweet not found...")
             }
         },
     },
