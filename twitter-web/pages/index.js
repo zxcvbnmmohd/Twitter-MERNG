@@ -18,7 +18,7 @@ export default function Home() {
       </Head>
 
       <main className="flex justify-center flex-row bg-black text-twitter-text">
-        <div className="flex flex-col justify-between border-r-2 border-r-twitter-border w-[300px] min-h-screen">
+        <div className="flex flex-col justify-between border-r border-r-twitter-border w-[300px] min-h-screen">
           <div className="grid auto-rows-min justify-items-start">
             <div className="flex h-[50px] ml-5">
               <div className="self-center">
@@ -39,14 +39,14 @@ export default function Home() {
               <h3 className="text-md font-bold">Tweet</h3>
             </div>
           </div>
-          
-          <div className="flex flex-row h-[50px] mb-5 justify-items-center justify-between">
+
+          <div className="flex flex-row mb-5 mr-3 pl-5 py-2 justify-items-center justify-between rounded-full cursor-pointer hover:bg-stone-600 hover:bg-opacity-30">
             <div className="flex flex-col justify-center w-[50px]">
               <Avatar className="" />
             </div>
-            <div className="flex flex-col grow mx-3 justify-around">
+            <div className="flex flex-col grow mx-1 justify-around">
               <div className="">moh'd</div>
-              <div className="">@zxcvbnmmohd</div>
+              <div className="text-twitter-text/40">@zxcvbnmmohd</div>
             </div>
             <div className="flex flex-col justify-center w-[50px]">
               <MoreHorizIcon />
@@ -59,9 +59,46 @@ export default function Home() {
             <h4 className="flex text-xl self-center">Home</h4>
             <Image classname="flex align-left" src="/images/logo.png" width="25" height="25" objectFit="contain" />
           </div>
+          <div className="flex flex-col justify-around h-[125px] border-t border-b border-t-twitter-border border-b-twitter-border">
+            <div className="flex flex-row items-center">
+              <div className="flex flex-col items-center w-[50px] px-5 mx-2">
+                <Avatar className="" />
+              </div>
+              <div>
+                What's happening?
+              </div>
+            </div>
+
+            <div className="flex flex-row justify-between">
+              <div className="w-[50px] px-5 mx-2">
+              </div>
+
+              <div className="flex flex-row grow">
+                <div className="self-center mr-3">
+                  <Image src="/images/logo.png" width="20" height="20" objectFit="contain" />
+                </div>
+                <div className="self-center mr-3">
+                  <Image src="/images/logo.png" width="20" height="20" objectFit="contain" />
+                </div>
+                <div className="self-center mr-3">
+                  <Image src="/images/logo.png" width="20" height="20" objectFit="contain" />
+                </div>
+                <div className="self-center mr-3">
+                  <Image src="/images/logo.png" width="20" height="20" objectFit="contain" />
+                </div>
+                <div className="self-center mr-3">
+                  <Image src="/images/logo.png" width="20" height="20" objectFit="contain" />
+                </div>
+              </div>
+
+              <div className="self-center bg-twitter-blue px-5 py-2 mr-6 rounded-full text-center hover:bg-twitter-blue-dark cursor-pointer">
+                <h3 className="text-sm font-bold">Tweet</h3>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="border-l-2 border-l-twitter-border w-[400px] min-h-screen">
+        <div className="border-l border-l-twitter-border w-[400px] min-h-screen">
           Search
         </div>
       </main>
