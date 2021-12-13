@@ -16,7 +16,9 @@ export default function Home() {
 
       <main className="flex justify-center flex-row bg-black text-twitter-text">
         <NavBar />
-        <TweetsSection />
+        {
+          loading ? <div>loading...</div> : <TweetsSection tweets={data.getTweets} />
+        }
         <BasicallyTheFooter />
       </main>
     </div>
