@@ -13,11 +13,13 @@ const generateToken = (user) => {
     return jwt.sign(
         {
             id: user.id,
-            email: user.email,
+            name: user.name,
             username: user.username,
+            dob: user.dob,
+            email: user.email,
         },
         process.env.jwtSecretKey,
-        { expiresIn: "1h" }
+        { expiresIn: "1h" },
     )
 }
 
@@ -25,16 +27,17 @@ module.exports = {
     Mutation: {
         register: async (
             _,
-            { registerInput: { username, email, password, confirmPassword } },
+            { registerInput: { name, username, dob, email, password } },
             context,
             info
         ) => {
             //  Vaidate User Data
             const { isValid, errors } = validateRegistration(
+                name,
                 username,
+                dob,
                 email,
                 password,
-                confirmPassword
             )
 
             if (!isValid) {
@@ -56,12 +59,16 @@ module.exports = {
             // Hash Password and Create Auth Token
             password = await bcrypt.hash(password, 12)
 
+            let now = new Date()
+            
             const newUser = new User({
+                name,
                 username,
+                dob,
                 email,
                 password,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
+                createdAt: now,
+                updatedAt: now,
             })
 
             const res = await newUser.save()
@@ -82,7 +89,6 @@ module.exports = {
                 errors.login = "User not found..."
                 throw new UserInputError("User not found...", { errors })
             }
-
 
             const loggedIn = await bcrypt.compare(password, user.password)
 

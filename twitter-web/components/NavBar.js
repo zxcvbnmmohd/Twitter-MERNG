@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Avatar } from '@material-ui/core'
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { PageButton } from "./"
 
 export default function NavBar() {
@@ -36,7 +36,7 @@ export default function NavBar() {
                     <div className="text-twitter-text/40">@zxcvbnmmohd</div>
                 </div>
                 <div className="flex flex-col justify-center w-[50px]">
-                    <MoreHorizIcon />
+                    <LogoutIcon />
                 </div>
             </div>
         </div>

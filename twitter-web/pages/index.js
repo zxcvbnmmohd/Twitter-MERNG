@@ -1,10 +1,51 @@
+import { useState } from 'react'
 import Head from "next/head";
-import { useQuery } from "@apollo/react-hooks";
-import { FETCH_ALL_TWEETS } from "../apis/"
-import { NavBar, TweetsSection, BasicallyTheFooter } from "../components/"
+import Image from "next/image";
+import { useMutation } from "@apollo/react-hooks"
+import { LOGIN_USER, REGISTER_USER } from "../apis/"
 
-export default function Home() {
-  const { loading, data } = useQuery(FETCH_ALL_TWEETS);
+export default function Login() {
+  const [loginVals, setLoginVals] = useState({
+    username: '',
+    password: '',
+  })
+  
+  const [registerVals, setRegisterVals] = useState({
+    name: '',
+    username: '',
+    dob: Date.now(),
+    email: '',
+    password: '',
+  })
+  
+  const onChange = (e) => {
+    setRegisterVals({ ...registerVals, [e.target.name]: e.target.value})
+    console.log(registerVals)
+  }
+
+  const onLogin = (e) => {
+    e.preventDefault()
+    login()
+  }
+
+  const onRegister = (e) => {
+    e.preventDefault()
+    register()
+  }
+  
+  const [login, { loading }] = useMutation(LOGIN_USER, {
+    update(proxy, result) {
+      console.log(result);
+    },
+    variables: loginVals,
+  })
+  
+  const [register, { loading }] = useMutation(REGISTER_USER, {
+    update(proxy, result) {
+      console.log(result);
+    },
+    variables: registerVals,
+  })
 
   return (
     <div>
@@ -14,12 +55,25 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex justify-center flex-row bg-black text-twitter-text">
-        <NavBar />
-        {
-          loading ? <div>loading...</div> : <TweetsSection tweets={data.getTweets} />
-        }
-        <BasicallyTheFooter />
+      <main className="flex flex-row justify-center bg-twitter-blue text-twitter-text h-screen items-center">
+        <div className="flex h-full w-full justify-center align-center">
+          <Image src="/images/logo.png" width="250" height="250" objectFit="contain" />
+        </div>
+
+        <div className="flex h-full w-full justify-center bg-black">
+          <div className="w-3/5 h-3/5 self-center bg-white text-black">
+            <form onSubmit={(e) => onRegister(e)} >
+
+              <input placeholder='Name' name="name" type="text" value={registerVals.name} onChange={(e) => onChange(e)} />
+              <input placeholder='Username' name="username" type="text" value={registerVals.username} onChange={(e) => onChange(e)} />
+              <input placeholder='Date of Birth' name="dob" type="date" value={registerVals.dob} onChange={(e) => onChange(e)} />
+              <input placeholder='Email' name="email" type="email" value={registerVals.email} onChange={(e) => onChange(e)} />
+              <input placeholder='Password' name="password" type="password" value={registerVals.password} onChange={(e) => onChange(e)} />
+
+              <button type='submit'>Regiser</button>
+            </form>
+          </div>
+        </div>
       </main>
     </div>
   );

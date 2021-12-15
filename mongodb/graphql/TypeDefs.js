@@ -2,7 +2,8 @@ const { gql } = require("apollo-server-express");
 
 module.exports = gql`
   scalar Upload
-  
+  scalar Date
+
   type Tweet {
     id: ID!
     body: String!
@@ -13,8 +14,8 @@ module.exports = gql`
     likes: [Like!]
     likesCount: Int!
     retweetedBy: [RetweetedBy!]
-    createdAt: String!
-    updatedAt: String!
+    createdAt: Date!
+    updatedAt: Date!
   }
   
   type Media {
@@ -27,35 +28,38 @@ module.exports = gql`
     id: ID!
     username: String!
     body: String!
-    createdAt: String!
+    createdAt: Date!
   }
   
   type Like {
     id: ID!
     username: String!
-    createdAt: String!
+    createdAt: Date!
   }
   
   type RetweetedBy {
     id: ID!
     username: String!
-    createdAt: String!
+    createdAt: Date!
   }
   
   type User {
     id: ID!
+    name: String!
     username: String!
+    dob: Date!
     email: String!
     token: String!
-    createdAt: String!
-    updatedAt: String!
+    createdAt: Date!
+    updatedAt: Date!
   }
   
   input RegisterInput {
+    name: String!
     username: String!
+    dob: Date!
     email: String!
     password: String!
-    confirmPassword: String!
   }
   
   input LoginInput {
