@@ -1,6 +1,7 @@
 const { model, Schema } = require('mongoose')
 
 const UserSchema = new Schema({
+    selfie: String,
     name: String,
     username: String,
     dob: Date,

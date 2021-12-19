@@ -13,6 +13,7 @@ const generateToken = (user) => {
     return jwt.sign(
         {
             id: user.id,
+            selfie: user.selfie,
             name: user.name,
             username: user.username,
             dob: user.dob,
@@ -27,7 +28,7 @@ module.exports = {
     Mutation: {
         register: async (
             _,
-            { registerInput: { name, username, dob, email, password } },
+            { registerInput: { selfie, name, username, dob, email, password } },
             context,
             info
         ) => {
@@ -62,6 +63,7 @@ module.exports = {
             let now = new Date()
             
             const newUser = new User({
+                selfie,
                 name,
                 username,
                 dob,
@@ -84,16 +86,20 @@ module.exports = {
         login: async (_, { loginInput: { username, password } }) => {
             const { isValid, errors } = validateLogin(username, password)
             const user = await User.findOne({ username })
-
+            
+            if (!isValid) {
+                throw new UserInputError("Invalid inputs...", { errors })
+            }
+            
             if (!user) {
-                errors.login = "User not found..."
+                errors.loginErr = "User not found..."
                 throw new UserInputError("User not found...", { errors })
             }
 
             const loggedIn = await bcrypt.compare(password, user.password)
 
             if (!loggedIn) {
-                errors.login = "Wrong Credentials..."
+                errors.loginErr = "Wrong Credentials..."
                 throw new UserInputError("Wrong Credentials...", { errors })
             }
 
@@ -104,6 +110,7 @@ module.exports = {
                 id: user._id,
                 token,
             }
+            
         },
     },
 }

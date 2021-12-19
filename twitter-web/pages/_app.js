@@ -1,5 +1,6 @@
 import { ApolloProvider } from "@apollo/client"
 import client from "../apollo-client"
+import { wrapper } from "../redux/store"
 
 import '../styles/globals.css'
 
@@ -11,4 +12,4 @@ function TwitterMERNG({ Component, pageProps }) {
   )
 }
 
-export default TwitterMERNG
+export default wrapper.withRedux(TwitterMERNG);

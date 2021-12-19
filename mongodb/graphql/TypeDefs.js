@@ -45,6 +45,7 @@ module.exports = gql`
   
   type User {
     id: ID!
+    selfie: String
     name: String!
     username: String!
     dob: Date!
@@ -55,6 +56,7 @@ module.exports = gql`
   }
   
   input RegisterInput {
+    selfie: String
     name: String!
     username: String!
     dob: Date!
