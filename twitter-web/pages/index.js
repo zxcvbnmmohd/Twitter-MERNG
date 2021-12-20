@@ -1,59 +1,52 @@
-import { useState } from "react";
-import Router from "next/router";
+import { useEffect, useState, useRef } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useMutation } from "@apollo/react-hooks";
+import { useRouter } from "next/router";
 import Loader from "react-loader-spinner";
-import { connect } from "react-redux"
-import { LOGIN_USER } from "../apis";
-import { setUser } from "../redux/actions/auth"
+import { connect } from "react-redux";
+import { useAuth } from "../components/auth";
 
-const Login = (props) => {
-  const { setUser } = props
+const Login = () => {
+  const { auth, initializing, getRedirect, clearRedirect, user } = useAuth();
+  const [values, setValues] = useState({ username: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const mounted = useRef(false);
+  const router = useRouter();
 
-  const [values, setValues] = useState({
-    username: "",
-    password: "",
-  });
-  const [errors, setErrors] = useState({});
-  const [login, { loading }] = useMutation(LOGIN_USER, {
-    update(_, result) {
-      setUser(result.data.login);
-      Router.push("/home");
-    },
-    onError: ({ graphQLErrors, networkError, operation, forward }) => {
-      if (graphQLErrors) {  
-        setErrors(graphQLErrors[0].extensions.errors)
-        for (let err of graphQLErrors) {
-          switch (err.extensions.code) {
-            case "UNAUTHENTICATED":
-              const oldHeaders = operation.getContext().headers;
-              operation.setContext({
-                headers: {
-                  ...oldHeaders,
-                  authorization: getNewToken(),
-                },
-              });
+  useEffect(() => {
+    mounted.current = true;
 
-              return forward(operation);
-          }
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!initializing) {
+      if (user) {
+        const redirect = getRedirect();
+        if (redirect) {
+          router.push(redirect);
+          clearRedirect();
+        } else {
+          router.push("/home");
         }
       }
-      if (networkError) {
-        console.log(`[Network error]: ${networkError}`);
-      }
-    },
-    variables: values,
-  });
+    }
+  }, [router, getRedirect, clearRedirect, initializing, user]);
 
   const onChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  const onLogin = (e) => {
+  const onLogin = async (e) => {
     e.preventDefault();
-    login();
+    setLoading(true);
+
+    await auth.login(values);
+
+    setLoading(false);
   };
 
   return (
@@ -72,19 +65,18 @@ const Login = (props) => {
             height="250"
             objectFit="contain"
           />
-
         </div>
 
         <div className="flex h-full w-full justify-center bg-black">
           <div className="w-3/5 h-3/5 self-center bg-white text-black rounded-lg self-middle">
             <form
               className="flex flex-col justify-center items-center m-20"
-              onSubmit={(e) => onLogin(e)}
+              onSubmit={async (e) => await onLogin(e)}
             >
               <h1 className="text-2xl mb-5 text-center">Login!</h1>
 
               <input
-                className={"w-4/5 h-[50px] mb-2 text-center rounded-full " + errors.username ?? " border-red-600 border-2"}
+                className="w-4/5 h-[50px] mb-2 text-center rounded-full"
                 placeholder="Username"
                 name="username"
                 type="text"
@@ -126,14 +118,6 @@ const Login = (props) => {
       </main>
     </div>
   );
-}
+};
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setUser: (user) => {
-      dispatch(setUser(user))
-    }
-  }
-}
-
-export default connect(null, mapDispatchToProps)(Login)
+export default connect(null, null)(Login);

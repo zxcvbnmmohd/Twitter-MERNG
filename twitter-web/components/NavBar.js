@@ -1,9 +1,11 @@
 import Router from "next/router";
 import { Avatar } from "@material-ui/core";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { PageButton } from "./";
+import { PageButton, useAuth } from "./";
 
-export default function NavBar({ logout, currentUser, currentPage }) {
+export default function NavBar({ currentPage }) {
+    const { auth, user } = useAuth();
+    
     return (
         <div className="flex flex-col justify-between border-r border-r-twitter-border w-[300px] min-h-screen">
             <div className="inline-flex flex-col items-start justify-start">
@@ -84,16 +86,16 @@ export default function NavBar({ logout, currentUser, currentPage }) {
 
             <div
                 className="flex flex-row mb-5 mr-3 pl-5 py-2 justify-items-center justify-between rounded-full cursor-pointer hover:bg-stone-600 hover:bg-opacity-30"
-                onClick={() => Router.push("/")}
+                onClick={() => auth.logout()}
             >
                 <div className="flex flex-col justify-center w-[50px]">
-                    <Avatar className="" src={currentUser.selfie ?? ""} />
+                    <Avatar className="" src={user.selfie ?? ""} />
                 </div>
                 <div className="flex flex-col grow mx-1 justify-around">
-                    <p className="whitespace-nowrap overflow-hidden block text-ellipsis w-[160px]">{currentUser.name}{currentUser.name}</p>
-                    <p className="text-twitter-text/40">@{currentUser.username}</p>
+                    <p className="whitespace-nowrap overflow-hidden block text-ellipsis w-[160px]">{user.name}</p>
+                    <p className="text-twitter-text/40">@{user.username}</p>
                 </div>
-                <div className="flex flex-col justify-center w-[50px]" onClick={logout}>
+                <div className="flex flex-col justify-center w-[50px]">
                     <LogoutIcon />
                 </div>
             </div>

@@ -18,6 +18,8 @@ const generateToken = (user) => {
             username: user.username,
             dob: user.dob,
             email: user.email,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
         },
         process.env.jwtSecretKey,
         { expiresIn: "1h" },

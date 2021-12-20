@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Head from "next/head";
-import Image from "next/image";
 import { connect } from "react-redux";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { ChatItem, NavBar, PageTitle } from "../components/";
@@ -94,6 +93,8 @@ const Messages = (props) => {
         </div>
     );
 };
+
+Messages.requireAuth = true
 
 const mapStateToProps = (state) => {
     return {

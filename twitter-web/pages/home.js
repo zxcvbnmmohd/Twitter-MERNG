@@ -1,14 +1,7 @@
 import Head from "next/head";
-import { useQuery } from "@apollo/react-hooks";
-import { connect } from "react-redux"
-import { FETCH_ALL_TWEETS } from "../apis/"
-import { NavBar, TweetsSection, BasicallyTheFooter } from "../components/"
-import { clearUser } from "../redux/actions/auth"
- 
- const Home = (props) => {
-  const { user, clearUser } = props;
-  const { loading, data } = useQuery(FETCH_ALL_TWEETS);
+import { NavBar, TweetsSection, BasicallyTheFooter } from "../components/";
 
+const Home = () => {
   return (
     <div>
       <Head>
@@ -18,26 +11,14 @@ import { clearUser } from "../redux/actions/auth"
       </Head>
 
       <main className="flex justify-center flex-row bg-black text-twitter-text">
-        <NavBar logout={clearUser} currentUser={user} currentPage={"Home"} />
-        { loading ? <h1>Loading...</h1> : <TweetsSection tweets={data.getTweets} />}
+        <NavBar currentPage={"Home"} />
+        <TweetsSection />
         <BasicallyTheFooter />
       </main>
     </div>
   );
-}
+};
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.auth.user,
-  }
-}
+Home.requireAuth = true;
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    clearUser: () => {
-      dispatch(clearUser())
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default Home;

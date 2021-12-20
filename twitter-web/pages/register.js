@@ -3,15 +3,15 @@ import Router from "next/router";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useMutation } from "@apollo/react-hooks";
 import Loader from "react-loader-spinner";
 import { connect } from "react-redux"
-import { REGISTER_USER } from "../apis/";
 import { setUser } from "../redux/actions/auth"
+// import { useAuth } from "../components/auth";
 
 const Register = (props) => {
   const { setUser } = props
 
+  const { register } = useAuth()
   const [values, setValues] = useState({
     name: "",
     username: "",
@@ -19,46 +19,25 @@ const Register = (props) => {
     email: "",
     password: "",
   });
-
-  const [register, { loading }] = useMutation(REGISTER_USER, {
-    update(_, result) {
-      setUser(result.data.register);
-      Router.push("/home");
-    },
-    onError: ({ graphQLErrors, networkError, operation, forward }) => {
-      if (graphQLErrors) {
-        console.log(graphQLErrors);
-        for (let err of graphQLErrors) {
-          console.log(err)
-          switch (err.extensions.code) {
-            case "UNAUTHENTICATED":
-              const oldHeaders = operation.getContext().headers;
-              operation.setContext({
-                headers: {
-                  ...oldHeaders,
-                  authorization: getNewToken(),
-                },
-              });
-
-              return forward(operation);
-          }
-        }
-      }
-
-      if (networkError) {
-        console.log(`[Network error]: ${networkError}`);
-      }
-    },
-    variables: values,
-  });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const onChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  const onRegister = (e) => {
+  const onRegister = async (e) => {
     e.preventDefault();
-    register();
+    setLoading(true)
+    
+    const token = await register(values);
+    
+    if (token) {
+      setUser(token);
+      Router.push("/home");
+    }
+    
+    setLoading(false)
   };
 
   return (
@@ -83,7 +62,7 @@ const Register = (props) => {
           <div className="w-3/5 h-3/5 self-center bg-white text-black rounded-lg">
             <form
               className="flex flex-col justify-center items-center m-20"
-              onSubmit={(e) => onRegister(e)}
+              onSubmit={async (e) => await onRegister(e)}
             >
               <h1 className="text-2xl mb-5 text-center">Make a new account!</h1>
 
