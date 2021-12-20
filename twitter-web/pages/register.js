@@ -52,7 +52,7 @@ const Register = () => {
     setLoading(true);
 
     await auth.register(values);
-    
+
     setLoading(false);
   };
 
@@ -124,10 +124,20 @@ const Register = () => {
               />
 
               <button
-                className="w-4/5 h-[50px] mb-3 bg-twitter-blue rounded-full text-white"
+                className="w-4/5 h-[50px] mb-3 bg-twitter-blue rounded-full text-white justify-center items-center"
                 type="submit"
               >
-                Register
+                {loading === true ? (
+                  <Loader
+                    type="Puff"
+                    color="#FFFFFF"
+                    height={40}
+                    width={40}
+                    timeout={5000}
+                  />
+                ) : (
+                  <p>REGISTER</p>
+                )}
               </button>
 
               <Link href="/" type="submit">
