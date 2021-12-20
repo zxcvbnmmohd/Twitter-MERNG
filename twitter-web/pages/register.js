@@ -1,17 +1,14 @@
-import { useState } from "react";
-import Router from "next/router";
+import { useEffect, useState, useRef } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import Loader from "react-loader-spinner";
-import { connect } from "react-redux"
-import { setUser } from "../redux/actions/auth"
-// import { useAuth } from "../components/auth";
+import { connect } from "react-redux";
+import { useAuth } from "../components/auth";
 
-const Register = (props) => {
-  const { setUser } = props
-
-  const { register } = useAuth()
+const Register = () => {
+  const { auth, initializing, getRedirect, clearRedirect, user } = useAuth();
   const [values, setValues] = useState({
     name: "",
     username: "",
@@ -21,6 +18,30 @@ const Register = (props) => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const mounted = useRef(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    mounted.current = true;
+
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!initializing) {
+      if (user) {
+        const redirect = getRedirect();
+        if (redirect) {
+          router.push(redirect);
+          clearRedirect();
+        } else {
+          router.push("/home");
+        }
+      }
+    }
+  }, [router, getRedirect, clearRedirect, initializing, user]);
 
   const onChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
@@ -28,16 +49,11 @@ const Register = (props) => {
 
   const onRegister = async (e) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
+
+    await auth.register(values);
     
-    const token = await register(values);
-    
-    if (token) {
-      setUser(token);
-      Router.push("/home");
-    }
-    
-    setLoading(false)
+    setLoading(false);
   };
 
   return (
@@ -123,14 +139,6 @@ const Register = (props) => {
       </main>
     </div>
   );
-}
+};
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setUser: (user) => {
-      dispatch(setUser(user))
-    }
-  }
-}
-
-export default connect(null, mapDispatchToProps)(Register)
+export default connect(null, null)(Register);
