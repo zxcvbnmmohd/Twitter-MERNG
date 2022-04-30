@@ -1,6 +1,6 @@
-import { FETCH_ALL_TWEETS } from "../apis/tweets"
+import { FETCH_ALL_TWEETS, FETCH_TWEET, CREATE_TWEET } from "../apis/tweets"
 import { LOGIN_USER, REGISTER_USER } from "../apis/users"
 
 export {
-    FETCH_ALL_TWEETS, LOGIN_USER, REGISTER_USER,
+    FETCH_ALL_TWEETS, FETCH_TWEET, CREATE_TWEET, LOGIN_USER, REGISTER_USER,
 }

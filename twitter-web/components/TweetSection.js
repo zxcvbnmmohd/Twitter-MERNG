@@ -3,10 +3,10 @@ import Image from "next/image";
 import { Avatar } from "@material-ui/core";
 import { useMutation } from "@apollo/react-hooks";
 import { FETCH_ALL_TWEETS, CREATE_TWEET } from "../apis/";
-import { PageTitle, Tweet } from "../components/";
+import { PageTitle, Tweet } from "./";
 import Loader from "react-loader-spinner";
 
-export default function TweetsSection({ loading, data }) {
+export default function TweetSection({ loading, data }) {
   const [values, setValues] = useState({ body: "" });
 
   const [createTweet, { error }] = useMutation(CREATE_TWEET, {
@@ -39,20 +39,27 @@ export default function TweetsSection({ loading, data }) {
     createTweet();
   }
 
-  return (
-    <div className="h-screen w-[600px] overflow-y-scroll">
-      <PageTitle title={"Home"} image={"/images/icons/dark/Home/Default.png"} />
+  return loading ? (
+    <Loader type="Puff" color="#FFFFFF" height={40} width={40} />
+  ) : (
+    <div className="h-screen w-[600px] overflow-x-hidden overflow-y-scroll">
+      <PageTitle
+        title={"Tweet"}
+        image={""}
+        underTitle={<Tweet tweet={data.getTweet} />}
+      />
 
-      <div className="flex flex-col justify-around h-[125px] border-t border-b-2 border-t-twitter-border border-b-twitter-border">
+      <div className="flex flex-col justify-around h-[125px] pb-4 border-t border-b-2 border-t-twitter-border border-b-twitter-border">
         <div className="flex flex-row items-center">
           <form className="flex flex-col grow" onSubmit={onCreateTweet}>
             <div className="flex flex-row">
               <div className="flex flex-col items-center w-[50px] px-5 m-4">
                 <Avatar className="" />
               </div>
+
               <input
                 className="flex w-full outline-none bg-transparent my-4"
-                placeholder="What's happening?"
+                placeholder="Tweet your reply"
                 name="body"
                 type="text"
                 value={values.body}
@@ -80,14 +87,6 @@ export default function TweetsSection({ loading, data }) {
                   </div>
                   <div className="self-center mr-3 cursor-pointer">
                     <Image
-                      src="/images/icons/dark/Poll/Default.png"
-                      width="25"
-                      height="25"
-                      objectFit="contain"
-                    />
-                  </div>
-                  <div className="self-center mr-3 cursor-pointer">
-                    <Image
                       src="/images/icons/dark/Emoji/Default.png"
                       width="25"
                       height="25"
@@ -96,7 +95,7 @@ export default function TweetsSection({ loading, data }) {
                   </div>
                   <div className="self-center mr-3 cursor-pointer">
                     <Image
-                      src="/images/icons/dark/Schedule/Default.png"
+                      src="/images/icons/dark/Location.png"
                       width="25"
                       height="25"
                       objectFit="contain"
@@ -108,7 +107,7 @@ export default function TweetsSection({ loading, data }) {
                   className="self-center bg-twitter-blue px-5 py-2 mr-6 rounded-full text-center hover:bg-twitter-blue-dark cursor-pointer"
                   type="submit"
                 >
-                  <h3 className="text-sm font-bold">Tweet</h3>
+                  <h3 className="text-sm font-bold">Reply</h3>
                 </button>
               </div>
             </div>
@@ -116,13 +115,7 @@ export default function TweetsSection({ loading, data }) {
         </div>
       </div>
       <div className="">
-        {loading ? (
-          <div className="flex mt-6 justify-center align-items-center">
-            <Loader type="Puff" color="#FFFFFF" height={40} width={40} />
-          </div>
-        ) : (
-          data.getTweets.map((tweet) => <Tweet key={tweet.id} tweet={tweet} />)
-        )}
+        <div className="p-4"></div>
       </div>
     </div>
   );

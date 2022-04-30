@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, createContext } from "react";
 import { ApolloProvider } from "@apollo/client";
 import { connect } from "react-redux";
-import { Auth } from "./auth";
+import { Auth } from "./";
 import { setUser, clearUser } from "../../redux/actions/auth";
 
 const auth = new Auth();
@@ -33,7 +33,6 @@ export function useAuth() {
 
 function AuthProvider(props) {
   const { user, setUser, clearUser, children } = props;
-  // const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [initializing, setInitializing] = useState(true);
 

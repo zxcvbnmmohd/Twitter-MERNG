@@ -19,9 +19,9 @@ module.exports = gql`
   }
   
   type Media {
-    filename: String!
-    mimetype: String!
-    encoding: String!
+    filename: String
+    mimetype: String
+    encoding: String
   }
   
   type Comment {

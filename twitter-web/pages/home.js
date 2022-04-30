@@ -1,7 +1,11 @@
 import Head from "next/head";
+import { useQuery } from "@apollo/react-hooks";
+import { FETCH_ALL_TWEETS } from "../apis/";
 import { NavBar, TweetsSection, BasicallyTheFooter } from "../components/";
 
 const Home = () => {
+  const { loading, data } = useQuery(FETCH_ALL_TWEETS);
+  
   return (
     <div>
       <Head>
@@ -12,7 +16,7 @@ const Home = () => {
 
       <main className="flex justify-center flex-row bg-black text-twitter-text">
         <NavBar currentPage={"Home"} />
-        <TweetsSection />
+        <TweetsSection loading={loading} data={data} />
         <BasicallyTheFooter />
       </main>
     </div>
